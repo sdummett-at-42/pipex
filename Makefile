@@ -6,7 +6,7 @@
 #    By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/30 22:23:23 by sdummett          #+#    #+#              #
-#    Updated: 2021/07/30 22:36:08 by sdummett         ###   ########.fr        #
+#    Updated: 2021/07/31 17:05:57 by sdummett         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,11 @@
 CC		= clang
 CFLAGS	= -Wall -Werror -Wextra
 NAME	= pipex
-SRC		= pipex.c
+SRC		= pipex.c \
+			ft_split.c \
+			ft_calloc.c \
+			ft_bzero.c \
+			ft_strnstr.c
 INC		= -Iincludes
 OBJ		= $(SRC:.c=.o)
 

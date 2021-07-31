@@ -1,30 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/30 22:20:39 by sdummett          #+#    #+#             */
-/*   Updated: 2021/07/31 17:10:35 by sdummett         ###   ########.fr       */
+/*   Created: 2021/07/31 16:02:17 by sdummett          #+#    #+#             */
+/*   Updated: 2021/07/31 16:02:40 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
-
-# include <stdio.h> //<- to delete 
-# include <stdlib.h>
-# include <unistd.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include <fcntl.h>
-# include <stddef.h>
-
-char	**ft_split(char const *s, char c);
-void	*ft_calloc(size_t nmemb, size_t size);
-void	ft_bzero(void *b, size_t len);
-char	*ft_strnstr(const char *big, const char *little, size_t len);
+#include "pipex.h"
 
 
-#endif
+void	ft_bzero(void *b, size_t len)
+{
+	while (len)
+	{
+		*(unsigned char *)b = 0;
+		b++;
+		len--;
+	}
+}
