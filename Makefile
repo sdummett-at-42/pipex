@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+         #
+#    By: stone <stone@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/30 22:23:23 by sdummett          #+#    #+#              #
-#    Updated: 2021/07/31 17:05:57 by sdummett         ###   ########.fr        #
+#    Updated: 2021/08/03 20:53:35 by stone            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,8 @@ SRC		= pipex.c \
 			ft_split.c \
 			ft_calloc.c \
 			ft_bzero.c \
-			ft_strnstr.c
+			ft_strnstr.c \
+			rm_n_first_char.c
 INC		= -Iincludes
 OBJ		= $(SRC:.c=.o)
 

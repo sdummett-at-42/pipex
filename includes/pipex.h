@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 22:20:39 by sdummett          #+#    #+#             */
-/*   Updated: 2021/07/31 17:10:35 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/08/03 20:54:28 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ char	**ft_split(char const *s, char c);
 void	*ft_calloc(size_t nmemb, size_t size);
 void	ft_bzero(void *b, size_t len);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
+void	rm_n_first_char(char **str, int n);
 
 
 #endif

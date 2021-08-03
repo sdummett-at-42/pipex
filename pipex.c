@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 22:20:05 by sdummett          #+#    #+#             */
-/*   Updated: 2021/07/31 17:38:40 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/08/03 21:08:27 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ char	**get_all_paths(void)
 	}
 	printf("tmp: |%s|\n", tmp);
 	path = ft_split(tmp, ':');
+	rm_n_first_char(&path[0], 5);
 	//	free(tmp);
 	i = 0;
 	while (path[i] != NULL)
