@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   rm_n_first_char.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/03 20:20:39 by stone             #+#    #+#             */
-/*   Updated: 2021/08/03 20:53:01 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/05 12:54:11 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "pipex.h"
-#include <stdlib.h>
-#include <stdio.h>
+#include "pipex.h"
 
 int	ft_strlen(char *str)
 {
