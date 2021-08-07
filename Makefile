@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+         #
+#    By: stone <stone@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/30 22:23:23 by sdummett          #+#    #+#              #
-#    Updated: 2021/08/05 14:34:18 by sdummett         ###   ########.fr        #
+#    Updated: 2021/08/07 23:05:56 by stone            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,8 @@ SRC		= pipex.c \
 			get_paths.c
 INC		= -Iincludes
 OBJ		= $(SRC:.c=.o)
+SRCBONUS=bonus/pipex_bonus.c
+OBJBONUS=$(SRCBONUS:.c=.o)
 
 # ************************************ #
 #                                      #
@@ -40,6 +42,9 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+
+bonus: $(OBJBONUS)
+	$(CC) $(CFLAGS) $(OBJBONUS) -o $(NAME)
 
 %.o: %.c
 	$(CC) $(INC) -c $(CFLAGS) -o $@ $<
