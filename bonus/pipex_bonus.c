@@ -6,41 +6,50 @@
 /*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 22:52:43 by stone             #+#    #+#             */
-/*   Updated: 2021/08/08 00:16:47 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/09 00:21:05 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-int	exec_cmd(int pipefd[1][2])
+int	exec_cmd(int pipein, int pipeout)
 {
 	int	value;
-	(void)pipefd;
-	read(pipefd[0][0], &value, sizeof(int));
+	read(pipein, &value, sizeof(int));
+	close(pipein);
 	printf("Hello i'm a child process\n");
 	printf("The value read is %d\n", value);
-	close(pipefd[0][0]);
-	close(pipefd[0][1]);
+	value = value + 1;
+	write(pipeout, &value, sizeof(int));
+	close(pipeout);
 	return (0);
 }
 
 int main()
 {
-	int	pipefd[1][2];
+	int	pipefd1[1][2];
+	int pipefd2[1][2];
 	int	pid;
 	int	i;
 	int x = 42;
-	i = 0;
-	while (i < 1)
+
+	if (pipe(pipefd1[0]) < 0)
 	{
-		pipe(pipefd[0]);
-		if (pipefd[0] < 0)
+		perror("pipe");
+		return (1);
+	}
+	write(pipefd1[0][1], &x, sizeof(int));
+	close(pipefd1[0][1]);
+
+	i = 0;
+	while (i < 5)
+	{
+		pipe(pipefd2[0]);
+		if (pipefd2[0] < 0)
 		{
 			perror("pipe");
 			return (1);
 		}
-		if (i == 0)
-			write(pipefd[0][1], &x, sizeof(int));
 		pid = fork();
 		if (pid < 0)
 		{
@@ -48,8 +57,10 @@ int main()
 			return (2);
 		}
 		if (pid == 0)
-			return (exec_cmd(&pipefd[0]));
-		close(pipefd[0][0]);
+			return (exec_cmd(pipefd1[0][0], pipefd2[0][1]));
+		close(pipefd1[0][0]);
+		close(pipefd2[0][1]);
+		pipefd1[0][0] = pipefd2[0][0];
 		i++;
 	}
 	while (i > 0)
