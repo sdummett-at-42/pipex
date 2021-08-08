@@ -6,7 +6,7 @@
 /*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 22:52:43 by stone             #+#    #+#             */
-/*   Updated: 2021/08/09 00:27:29 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/09 00:52:14 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,29 @@
 int	exec_cmd(int pipein, int pipeout)
 {
 	int	value;
-	read(pipein, &value, sizeof(int));
+	int fdin;
+	int fdout;
+	fdin = dup2(pipein, STDIN_FILENO);
 	close(pipein);
+	if (fdin < 0)
+	{
+		perror("dup2");
+		return(1);
+	}
+	read(fdin, &value, sizeof(int));
+	close(fdin);
 	printf("Hello i'm a child process\n");
 	printf("The value read is %d\n", value);
 	value = value + 1;
-	write(pipeout, &value, sizeof(int));
+	fdout = dup2(pipeout, STDOUT_FILENO);
 	close(pipeout);
+	if (fdout < 0)
+	{
+		perror("dup2");
+		return (2);
+	}
+	write(fdout, &value, sizeof(int));
+	close(fdout);
 	return (0);
 }
 
