@@ -6,7 +6,7 @@
 /*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 22:52:43 by stone             #+#    #+#             */
-/*   Updated: 2021/08/09 00:21:05 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/09 00:27:29 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,25 +27,25 @@ int	exec_cmd(int pipein, int pipeout)
 
 int main()
 {
-	int	pipefd1[1][2];
-	int pipefd2[1][2];
+	int	pipefd1[2];
+	int pipefd2[2];
 	int	pid;
 	int	i;
 	int x = 42;
 
-	if (pipe(pipefd1[0]) < 0)
+	if (pipe(pipefd1) < 0)
 	{
 		perror("pipe");
 		return (1);
 	}
-	write(pipefd1[0][1], &x, sizeof(int));
-	close(pipefd1[0][1]);
+	write(pipefd1[1], &x, sizeof(int));
+	close(pipefd1[1]);
 
 	i = 0;
 	while (i < 5)
 	{
-		pipe(pipefd2[0]);
-		if (pipefd2[0] < 0)
+		pipe(pipefd2);
+		if (pipefd2 < 0)
 		{
 			perror("pipe");
 			return (1);
@@ -57,10 +57,10 @@ int main()
 			return (2);
 		}
 		if (pid == 0)
-			return (exec_cmd(pipefd1[0][0], pipefd2[0][1]));
-		close(pipefd1[0][0]);
-		close(pipefd2[0][1]);
-		pipefd1[0][0] = pipefd2[0][0];
+			return (exec_cmd(pipefd1[0], pipefd2[1]));
+		close(pipefd1[0]);
+		close(pipefd2[1]);
+		pipefd1[0] = pipefd2[0];
 		i++;
 	}
 	while (i > 0)
