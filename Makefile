@@ -6,7 +6,7 @@
 #    By: stone <stone@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/30 22:23:23 by sdummett          #+#    #+#              #
-#    Updated: 2021/08/10 03:25:16 by stone            ###   ########.fr        #
+#    Updated: 2021/08/10 15:43:07 by stone            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,11 @@ SRCBONUS	=bonus/pipex_bonus.c \
 			bonus/utils/ft_calloc.c \
 			bonus/utils/ft_strjoin.c \
 			bonus/utils/ft_strnstr.c \
-			bonus/utils/rm_n_first_char.c
+			bonus/utils/rm_n_first_char.c \
+			bonus/utils/ft_strncmp.c \
+			bonus/utils/gnl/get_next_line_utils.c \
+			bonus/utils/gnl/get_next_line.c
+
 OBJBONUS	=$(SRCBONUS:.c=.o)
 
 # ************************************ #

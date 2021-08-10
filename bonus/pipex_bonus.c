@@ -6,7 +6,7 @@
 /*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 22:52:43 by stone             #+#    #+#             */
-/*   Updated: 2021/08/10 03:10:46 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/10 19:19:22 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int	cmd(int pipein, int pipeout, char *cmd)
 {
 	int fdin;
 	int fdout;
-	// char *tab[2]; // <- temporary
 
 	fdin = dup2(pipein, STDIN_FILENO);
 	close(pipein);
@@ -33,12 +32,112 @@ int	cmd(int pipein, int pipeout, char *cmd)
 		return (2);
 	}
 	exec_cmd(cmd);
-	// execve(cmd, tab, NULL);
 	perror(cmd);
 	close(fdout);
+	printf("quit\n");
 	return (2);
 }
 
+void	create_heredoc(char *limiter)
+{
+	char	*heredoc;
+	char	*line;
+	char	*tmp;
+	int		len;
+	int		fd;
+
+	(void)limiter;
+	heredoc = ft_strjoin("", "");
+	while (1)
+	{
+		write(1, "pipe heredoc> ", 14);
+		get_next_line(0, &line);
+		if (ft_strlen(line) > ft_strlen(limiter))
+			len = ft_strlen(line);
+		else
+			len = ft_strlen(limiter);
+		if (ft_strncmp(line, limiter, len) == 0)
+		{
+			free(line);
+			break ;
+		}
+		tmp = heredoc;
+		heredoc = ft_strjoin(heredoc, line);
+		free(line);
+		free(tmp);
+		tmp = heredoc;
+		heredoc = ft_strjoin(heredoc, "\n");
+		free(tmp);
+	}
+	fd = open(".heredoc", O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU);
+	if (fd < 0)
+	{
+		perror("open");
+		return ;
+	}
+	write(fd, heredoc, ft_strlen(heredoc));
+	close(fd);
+	free(heredoc);
+}
+
+void	heredoc(char *limiter, char *cmd1, char *cmd2, char *outfile)
+{
+	int	fd_heredoc;
+	int	fd_out;
+	int	pipefd[2];
+	int	pid;
+	int i;
+
+	create_heredoc(limiter);
+	fd_heredoc = open(".heredoc", O_RDONLY);
+	if (fd_heredoc < 0)
+	{
+		perror("open");
+		return;
+	}
+	fd_out = open(outfile, O_CREAT | O_WRONLY | O_APPEND, S_IRWXU);
+	if (fd_out < 0)
+	{
+		perror("open");
+		return ;
+	}
+	pipe(pipefd);
+	if (pipefd < 0)
+	{
+		perror("pipe");
+		return ;
+	}
+	i = 0;
+	while (i < 2)
+	{
+		pid = fork();
+		if (pid < 0)
+		{
+			perror("fork");
+			return ;
+		}
+		if (pid == 0)
+		{
+			if (i == 0)
+			{
+				cmd(fd_heredoc, pipefd[1], cmd1);
+				exit(1);
+			}
+			else
+			{
+				cmd(pipefd[0], fd_out, cmd2);
+				exit(1);
+			}
+		}
+		i++;
+	}
+	close(pipefd[0]);
+	close(pipefd[1]);
+	close(fd_heredoc);
+	close(fd_out);
+	wait(NULL);
+	unlink(".heredoc");
+}
 int main(int ac, char **av)
 {
 	int	pipefd1[2];
@@ -50,8 +149,18 @@ int main(int ac, char **av)
 
 	if (ac < 5)
 	{
-		printf("Error : Wrong number of args.\n");
+		printf("Error: Wrong number of args.\n");
 		return (1);
+	}
+	if (ft_strncmp(av[1], "here_doc", ft_strlen(av[1])) == 0)
+	{
+		if (ac != 6)
+		{
+			printf("Error: Wrong numner of args(heredoc)\n");
+			return (1);
+		}
+		heredoc(av[2], av[3], av[4], av[5]);
+		return (0);
 	}
 	infilefd = open(av[1], O_RDONLY);
 	if (infilefd < 0)
