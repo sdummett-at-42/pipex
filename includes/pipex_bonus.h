@@ -6,7 +6,7 @@
 /*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 22:58:17 by stone             #+#    #+#             */
-/*   Updated: 2021/08/10 03:25:01 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/10 17:47:16 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@ void	ft_bzero(void *b, size_t len);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
 void	rm_n_first_char(char **str, int n);
+int		ft_strncmp(const char *str1, const char *str2, size_t count);
+int		ft_strlen(char *str);
+int		get_next_line(int fd, char **line);
 
 typedef struct s_path
 {
