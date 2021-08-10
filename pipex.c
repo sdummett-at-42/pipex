@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 22:20:05 by sdummett          #+#    #+#             */
-/*   Updated: 2021/08/05 14:33:55 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/08/10 00:40:58 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,11 @@
 ** Parser les arguments et les envoyer aux commandes respectives
 */
 
-int	cmd2(int pipefd[], char *file, char **args, char **path)
+int	cmd2(int pipefd[], char *file, char *args_to_parse)
 {
 	int	fd;
 	int	fd2;
-	int	i;
-
+	
 	close(pipefd[1]);
 	fd = dup2(pipefd[0], STDIN_FILENO);
 	close(pipefd[0]);
@@ -43,21 +42,14 @@ int	cmd2(int pipefd[], char *file, char **args, char **path)
 		perror("dup2");
 		return (3);
 	}
-	i = 0;
-	while (path[i] != NULL)
-	{
-		execve(path[i], args, NULL);
-		i++;
-	}
-	perror(args[0]);
+	exec_cmd(args_to_parse);
 	return (4);
 }
 
-int	cmd1(int pipefd[], char *file, char **args, char **path)
+int	cmd1(int pipefd[], char *file, char *args_to_parse)
 {
 	int	fd;
 	int	fd2;
-	int	i;
 
 	close(pipefd[0]);
 	fd = dup2(pipefd[1], STDOUT_FILENO);
@@ -80,13 +72,7 @@ int	cmd1(int pipefd[], char *file, char **args, char **path)
 		perror("dup2");
 		return (3);
 	}
-	i = 0;
-	while (path[i] != NULL)
-	{
-		execve(path[i], args, NULL);
-		i++;
-	}
-	perror(args[0]);
+	exec_cmd(args_to_parse);
 	return (4);
 }
 
@@ -94,15 +80,10 @@ int	cmd1(int pipefd[], char *file, char **args, char **path)
 ** Gerer les retours des process ?
 */
 
-
 int	main(int ac, char **av)
 {
 	int			pid;
 	int			pipefd[2];
-	char		**args_cmd1;
-	char		**args_cmd2;
-	char		**path_cmd1;
-	char		**path_cmd2;
 
 	if (ac != 5)
 	{
@@ -114,23 +95,15 @@ int	main(int ac, char **av)
 		perror("pipe");
 		return (2);
 	}
-	args_cmd1 = ft_split(av[2], ' ');
-	path_cmd1 = get_paths(*args_cmd1);
 	pid = fork();
 	if (pid == 0)
-		return (cmd1(pipefd, av[1],  args_cmd1, path_cmd1));
-	args_cmd2 = ft_split(av[3], ' ');
-	path_cmd2 = get_paths(*args_cmd2);
+		return (cmd1(pipefd, av[1],  av[2]));
 	pid = fork();
 	if (pid == 0)
-		return (cmd2(pipefd, av[4], args_cmd2, path_cmd2));
+		return (cmd2(pipefd, av[4], av[3]));
 	close(pipefd[0]);
 	close(pipefd[1]);
 	wait(NULL);
 	wait(NULL);	
-	free(args_cmd1);
-	free(path_cmd1);
-	free(args_cmd2);
-	free(path_cmd2); // <- free all the pointer inside path_cmd[1-2]
 	return (0);
 }

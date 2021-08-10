@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+         #
+#    By: stone <stone@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/30 22:23:23 by sdummett          #+#    #+#              #
-#    Updated: 2021/08/05 14:34:18 by sdummett         ###   ########.fr        #
+#    Updated: 2021/08/10 00:39:42 by stone            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,8 @@ SRC		= pipex.c \
 			utils/ft_strnstr.c \
 			utils/ft_strjoin.c \
 			rm_n_first_char.c \
-			get_paths.c
+			get_paths.c \
+			exec_cmd.c
 INC		= -Iincludes
 OBJ		= $(SRC:.c=.o)
 
