@@ -6,7 +6,7 @@
 #    By: stone <stone@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/30 22:23:23 by sdummett          #+#    #+#              #
-#    Updated: 2021/08/07 23:20:01 by stone            ###   ########.fr        #
+#    Updated: 2021/08/10 03:25:16 by stone            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,15 @@ SRC			= pipex.c \
 INC			= -Iincludes
 includes	= $(wildcard includes/*.h)
 OBJ			= $(SRC:.c=.o)
-SRCBONUS	=bonus/pipex_bonus.c
+SRCBONUS	=bonus/pipex_bonus.c \
+			bonus/exec_cmd_bonus.c \
+			bonus/get_paths_bonus.c \
+			bonus/utils/ft_bzero.c \
+			bonus/utils/ft_split.c \
+			bonus/utils/ft_calloc.c \
+			bonus/utils/ft_strjoin.c \
+			bonus/utils/ft_strnstr.c \
+			bonus/utils/rm_n_first_char.c
 OBJBONUS	=$(SRCBONUS:.c=.o)
 
 # ************************************ #
