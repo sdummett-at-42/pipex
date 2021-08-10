@@ -26,6 +26,7 @@ SRC			= pipex.c \
 			utils/ft_strnstr.c \
 			utils/ft_strjoin.c \
 			rm_n_first_char.c \
+      exec_cmd.c \
 			get_paths.c
 INC			= -Iincludes
 includes	= $(wildcard includes/*.h)
