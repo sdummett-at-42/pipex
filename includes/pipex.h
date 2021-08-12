@@ -6,7 +6,7 @@
 /*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 22:20:39 by sdummett          #+#    #+#             */
-/*   Updated: 2021/08/12 17:41:01 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/12 18:21:17 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	rm_n_first_char(char **str, int n);
 char	**get_paths(char *cmd);
 void	exec_cmd(char **args, char **path);
 void	free_tab(char **ptr);
+void	free_args_path(char **args, char **path);
 
 typedef struct s_path
 {

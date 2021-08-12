@@ -6,7 +6,7 @@
 /*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 22:58:17 by stone             #+#    #+#             */
-/*   Updated: 2021/08/10 17:47:16 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/12 18:22:31 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <stddef.h>
 # include <stdbool.h>
 
-void	exec_cmd(char *args_to_parse);
+void	exec_cmd(char **args, char **path);
 char	**ft_split(char const *s, char c);
 char	**get_paths(char *cmd);
 void	*ft_calloc(size_t nmemb, size_t size);
@@ -33,6 +33,7 @@ void	rm_n_first_char(char **str, int n);
 int		ft_strncmp(const char *str1, const char *str2, size_t count);
 int		ft_strlen(char *str);
 int		get_next_line(int fd, char **line);
+void	free_args_path(char **args, char **path);
 
 typedef struct s_path
 {

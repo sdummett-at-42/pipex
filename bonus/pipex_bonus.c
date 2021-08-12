@@ -6,13 +6,13 @@
 /*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 22:52:43 by stone             #+#    #+#             */
-/*   Updated: 2021/08/12 16:22:23 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/12 18:32:52 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-int	cmd(int pipein, int pipeout, char *cmd)
+int	cmd(int pipein, int pipeout, char **args, char **path)
 {
 	int	fdin;
 	int	fdout;
@@ -31,10 +31,8 @@ int	cmd(int pipein, int pipeout, char *cmd)
 		perror("dup2");
 		return (2);
 	}
-	exec_cmd(cmd);
-	perror(cmd);
+	exec_cmd(args, path);
 	close(fdout);
-	printf("quit\n");
 	return (2);
 }
 
@@ -82,11 +80,15 @@ void	create_heredoc(char *limiter)
 
 void	heredoc(char *limiter, char *cmd1, char *cmd2, char *outfile)
 {
-	int	fd_heredoc;
-	int	fd_out;
-	int	pipefd[2];
-	int	pid;
-	int	i;
+	char	**args1;
+	char	**path1;
+	char	**args2;
+	char	**path2;
+	int		fd_heredoc;
+	int		fd_out;
+	int		pipefd[2];
+	int		pid;
+	int		i;
 
 	create_heredoc(limiter);
 	fd_heredoc = open(".heredoc", O_RDONLY);
@@ -110,6 +112,10 @@ void	heredoc(char *limiter, char *cmd1, char *cmd2, char *outfile)
 	i = 0;
 	while (i < 2)
 	{
+		args1 = ft_split(cmd1, ' ');
+		path1 = get_paths(*args1);
+		args2 = ft_split(cmd2, ' ');
+		path2 = get_paths(*args2);
 		pid = fork();
 		if (pid < 0)
 		{
@@ -120,12 +126,12 @@ void	heredoc(char *limiter, char *cmd1, char *cmd2, char *outfile)
 		{
 			if (i == 0)
 			{
-				cmd(fd_heredoc, pipefd[1], cmd1);
+				cmd(fd_heredoc, pipefd[1], args1, path1);
 				exit(1);
 			}
 			else
 			{
-				cmd(pipefd[0], fd_out, cmd2);
+				cmd(pipefd[0], fd_out, args2, path2);
 				exit(1);
 			}
 		}
@@ -141,12 +147,14 @@ void	heredoc(char *limiter, char *cmd1, char *cmd2, char *outfile)
 
 int	main(int ac, char **av)
 {
-	int	pipefd1[2];
-	int	pipefd2[2];
-	int	infilefd;
-	int	outfilefd;
-	int	pid;
-	int	i;
+	char	**args;
+	char	**path;
+	int		pipefd1[2];
+	int		pipefd2[2];
+	int		infilefd;
+	int		outfilefd;
+	int		pid;
+	int		i;
 
 	if (ac < 5)
 	{
@@ -184,6 +192,8 @@ int	main(int ac, char **av)
 			perror("pipe");
 			return (1);
 		}
+		args = ft_split(av[i + 1], ' ');
+		path = get_paths(*args);
 		pid = fork();
 		if (pid < 0)
 		{
@@ -193,11 +203,11 @@ int	main(int ac, char **av)
 		if (pid == 0)
 		{
 			if (i == 1)
-				return (cmd(infilefd, pipefd2[1], av[i + 1]));
+				return (cmd(infilefd, pipefd2[1], args, path));
 			else if (i == ac - 3)
-				return (cmd(pipefd1[0], outfilefd, av[i + 1]));
+				return (cmd(pipefd1[0], outfilefd, args, path));
 			else
-				return (cmd(pipefd1[0], pipefd2[1], av[i + 1]));
+				return (cmd(pipefd1[0], pipefd2[1], args, path));
 		}
 		close(pipefd1[0]);
 		close(pipefd2[1]);

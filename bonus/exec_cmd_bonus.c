@@ -6,7 +6,7 @@
 /*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 03:04:15 by stone             #+#    #+#             */
-/*   Updated: 2021/08/12 16:23:01 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/12 18:34:00 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	check_path(char *path, t_path *path_type)
 	if (path[0] == '/')
 	{
 		path_type->is_absolute = true;
-		return        ;
+		return ;
 	}
 	if (path[0] == '.' && path[1] == '/')
 	{
@@ -42,15 +42,11 @@ void	check_path(char *path, t_path *path_type)
 	}
 }
 
-void	exec_cmd(char *args_to_parse)
+void	exec_cmd(char **args, char **path)
 {
 	t_path	path_type;
-	char	**args;
-	char	**path;
 	int		i;
 
-	args = ft_split(args_to_parse, ' ');
-	path = get_paths(*args);
 	check_path(args[0], &path_type);
 	if (path_type.is_relative || path_type.is_absolute)
 	{
@@ -69,4 +65,5 @@ void	exec_cmd(char *args_to_parse)
 		}
 	}
 	perror(args[0]);
+	free_args_path(args, path);
 }

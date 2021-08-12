@@ -6,37 +6,15 @@
 /*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 22:20:05 by sdummett          #+#    #+#             */
-/*   Updated: 2021/08/12 18:11:52 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/12 18:33:41 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	free_tab(char **ptr)
-{
-	int		i;
-
-	i = 0;
-	while (ptr[i] != NULL)
-	{
-		printf("|%s|\n", ptr[i]);
-		free(ptr[i]);
-		ptr[i] = NULL;
-		i++;
-	}
-	free(ptr);
-	ptr = NULL;
-}
-
 /*
 ** Parser les arguments et les envoyer aux commandes respectives
 */
-
-void	free_args_path(char **args, char **path)
-{
-	free_tab(args);
-	free_tab(path);
-}
 
 int	cmd2(int pipefd[], char *file, char **args, char **path)
 {
@@ -138,10 +116,7 @@ int	main(int ac, char **av)
 	path = get_paths(*args);
 	pid = fork();
 	if (pid == 0)
-	{
 		return (cmd2(pipefd, av[4], args, path));
-
-	}
 	free_tab(args);
 	free_tab(path);
 	close(pipefd[0]);
