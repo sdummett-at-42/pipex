@@ -6,12 +6,11 @@
 /*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 16:02:17 by sdummett          #+#    #+#             */
-/*   Updated: 2021/08/10 03:21:28 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/12 16:23:14 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
-
 
 void	ft_bzero(void *b, size_t len)
 {

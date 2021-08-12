@@ -6,33 +6,57 @@
 /*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 22:20:05 by sdummett          #+#    #+#             */
-/*   Updated: 2021/08/10 00:40:58 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/12 18:11:52 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+void	free_tab(char **ptr)
+{
+	int		i;
+
+	i = 0;
+	while (ptr[i] != NULL)
+	{
+		printf("|%s|\n", ptr[i]);
+		free(ptr[i]);
+		ptr[i] = NULL;
+		i++;
+	}
+	free(ptr);
+	ptr = NULL;
+}
+
 /*
 ** Parser les arguments et les envoyer aux commandes respectives
 */
 
-int	cmd2(int pipefd[], char *file, char *args_to_parse)
+void	free_args_path(char **args, char **path)
+{
+	free_tab(args);
+	free_tab(path);
+}
+
+int	cmd2(int pipefd[], char *file, char **args, char **path)
 {
 	int	fd;
 	int	fd2;
-	
+
 	close(pipefd[1]);
 	fd = dup2(pipefd[0], STDIN_FILENO);
 	close(pipefd[0]);
 	if (fd < 0)
 	{
 		perror("dup2");
+		free_args_path(args, path);
 		return (1);
 	}
 	fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (fd < 0)
 	{
 		perror("open");
+		free_args_path(args, path);
 		return (2);
 	}
 	fd2 = dup2(fd, STDOUT_FILENO);
@@ -40,13 +64,15 @@ int	cmd2(int pipefd[], char *file, char *args_to_parse)
 	if (fd2 < 0)
 	{
 		perror("dup2");
+		free_args_path(args, path);
 		return (3);
 	}
-	exec_cmd(args_to_parse);
+	exec_cmd(args, path);
+	free_args_path(args, path);
 	return (4);
 }
 
-int	cmd1(int pipefd[], char *file, char *args_to_parse)
+int	cmd1(int pipefd[], char *file, char **args, char **path)
 {
 	int	fd;
 	int	fd2;
@@ -57,12 +83,14 @@ int	cmd1(int pipefd[], char *file, char *args_to_parse)
 	if (fd < 0)
 	{
 		perror("dup2");
+		free_args_path(args, path);
 		return (1);
 	}
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 	{
 		perror("open");
+		free_args_path(args, path);
 		return (2);
 	}
 	fd2 = dup2(fd, STDIN_FILENO);
@@ -70,9 +98,11 @@ int	cmd1(int pipefd[], char *file, char *args_to_parse)
 	if (fd2 < 0)
 	{
 		perror("dup2");
+		free_args_path(args, path);
 		return (3);
 	}
-	exec_cmd(args_to_parse);
+	exec_cmd(args, path);
+	free_args_path(args, path);
 	return (4);
 }
 
@@ -82,8 +112,10 @@ int	cmd1(int pipefd[], char *file, char *args_to_parse)
 
 int	main(int ac, char **av)
 {
-	int			pid;
-	int			pipefd[2];
+	int		pid;
+	int		pipefd[2];
+	char	**args;
+	char	**path;
 
 	if (ac != 5)
 	{
@@ -95,15 +127,26 @@ int	main(int ac, char **av)
 		perror("pipe");
 		return (2);
 	}
+	args = ft_split(av[2], ' ');
+	path = get_paths(*args);
 	pid = fork();
 	if (pid == 0)
-		return (cmd1(pipefd, av[1],  av[2]));
+		return (cmd1(pipefd, av[1], args, path));
+	free_tab(args);
+	free_tab(path);
+	args = ft_split(av[3], ' ');
+	path = get_paths(*args);
 	pid = fork();
 	if (pid == 0)
-		return (cmd2(pipefd, av[4], av[3]));
+	{
+		return (cmd2(pipefd, av[4], args, path));
+
+	}
+	free_tab(args);
+	free_tab(path);
 	close(pipefd[0]);
 	close(pipefd[1]);
 	wait(NULL);
-	wait(NULL);	
+	wait(NULL);
 	return (0);
 }

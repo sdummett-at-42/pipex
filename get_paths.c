@@ -6,7 +6,7 @@
 /*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/05 12:57:12 by sdummett          #+#    #+#             */
-/*   Updated: 2021/08/09 21:42:14 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/12 17:06:08 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,21 +50,17 @@ char	**get_paths(char *cmd)
 	char		*tmp;
 	int			i;
 
-	fflush(stdout);
 	i = 0;
 	tmp = NULL;
 	while (__environ[i] != NULL)
 	{
 		tmp = ft_strnstr(__environ[i], "PATH=", 5);
 		if (tmp != NULL)
-			break;
+			break ;
 		i++;
 	}
 	path = ft_split(tmp, ':');
 	rm_n_first_char(&path[0], 5);
 	cat_cmd_with_path(path, cmd);
-	// free(tmp);
-	// free_paths(path);
-	// return (path);
 	return (path);
 }

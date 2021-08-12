@@ -6,7 +6,7 @@
 /*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/05 12:57:12 by sdummett          #+#    #+#             */
-/*   Updated: 2021/08/10 03:14:50 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/12 16:23:37 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,17 @@ char	**get_paths(char *cmd)
 	{
 		tmp = ft_strnstr(__environ[i], "PATH=", 5);
 		if (tmp != NULL)
-			break;
+			break ;
 		i++;
 	}
 	path = ft_split(tmp, ':');
 	rm_n_first_char(&path[0], 5);
 	cat_cmd_with_path(path, cmd);
+	return (path);
+}
+
+/*
 	// free(tmp);
 	// free_paths(path);
 	// return (path);
-	return (path);
-}
+*/

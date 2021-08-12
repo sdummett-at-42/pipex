@@ -6,7 +6,7 @@
 /*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 22:52:43 by stone             #+#    #+#             */
-/*   Updated: 2021/08/10 19:19:22 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/12 16:22:23 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 int	cmd(int pipein, int pipeout, char *cmd)
 {
-	int fdin;
-	int fdout;
+	int	fdin;
+	int	fdout;
 
 	fdin = dup2(pipein, STDIN_FILENO);
 	close(pipein);
 	if (fdin < 0)
 	{
 		perror("dup2");
-		return(1);
+		return (1);
 	}
 	fdout = dup2(pipeout, STDOUT_FILENO);
 	close(pipeout);
@@ -86,14 +86,14 @@ void	heredoc(char *limiter, char *cmd1, char *cmd2, char *outfile)
 	int	fd_out;
 	int	pipefd[2];
 	int	pid;
-	int i;
+	int	i;
 
 	create_heredoc(limiter);
 	fd_heredoc = open(".heredoc", O_RDONLY);
 	if (fd_heredoc < 0)
 	{
 		perror("open");
-		return;
+		return ;
 	}
 	fd_out = open(outfile, O_CREAT | O_WRONLY | O_APPEND, S_IRWXU);
 	if (fd_out < 0)
@@ -138,10 +138,11 @@ void	heredoc(char *limiter, char *cmd1, char *cmd2, char *outfile)
 	wait(NULL);
 	unlink(".heredoc");
 }
-int main(int ac, char **av)
+
+int	main(int ac, char **av)
 {
 	int	pipefd1[2];
-	int pipefd2[2];
+	int	pipefd2[2];
 	int	infilefd;
 	int	outfilefd;
 	int	pid;
@@ -172,7 +173,7 @@ int main(int ac, char **av)
 	if (outfilefd < 0)
 	{
 		perror("open");
-		return(3);
+		return (3);
 	}
 	i = 1;
 	while (i < ac - 2)

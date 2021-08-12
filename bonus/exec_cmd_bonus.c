@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_cmd.c                                         :+:      :+:    :+:   */
+/*   exec_cmd_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 03:04:15 by stone             #+#    #+#             */
-/*   Updated: 2021/08/10 03:04:47 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/12 16:23:01 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	check_path(char *path, t_path *path_type)
 {
-	int i;
+	int	i;
 
 	path_type->is_absolute = false;
 	path_type->is_relative = false;
@@ -22,7 +22,7 @@ void	check_path(char *path, t_path *path_type)
 	if (path[0] == '/')
 	{
 		path_type->is_absolute = true;
-		return;
+		return        ;
 	}
 	if (path[0] == '.' && path[1] == '/')
 	{
