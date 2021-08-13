@@ -17,30 +17,30 @@ make bonus
 ## Mandatory
 It should be executed this way
 ```sh
-$> ./pipex file1 cmd1 cmd2 file2
+./pipex file1 cmd1 cmd2 file2
 ```
 This is similar to the next shell command
 ```sh
-$> < file1 cmd1 | cmd2 > file2
+< file1 cmd1 | cmd2 > file2
 ```
 
 ## Bonus
 For multiple pipes handling
 ```sh
-$> ./pipex file1 cmd1 cmd2 cmd3 ... cmdn file2
+./pipex file1 cmd1 cmd2 cmd3 ... cmdn file2
 ```
 This is the equivalent of the next shell command
 ```sh
-$> < file1 cmd1 | cmd2 | cmd3 ... | cmdn > file2
+< file1 cmd1 | cmd2 | cmd3 ... | cmdn > file2
 ```
 
 For the heredoc handling
 ```sh
-$> ./pipex here_doc LIMITER cmd cmd1 file
+./pipex here_doc LIMITER cmd cmd1 file
 ```
 This is similar to the next shell command
 ```sh
-$> cmd << LIMITER | cmd1 >> file
+cmd << LIMITER | cmd1 >> file
 ```
 
 ## Author
