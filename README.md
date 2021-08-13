@@ -4,6 +4,8 @@
 
 ## Install
 
+Just `git@github.com:sdummett/pipex.git` and `cd pipex`
+then
 ```sh
 make
 ```
@@ -12,9 +14,9 @@ or for the bonus part (multiple pipes and heredoc handling)
 make bonus
 ```
 
-## Usage
+### Usage
 
-## Mandatory
+### Mandatory
 It should be executed this way
 ```sh
 ./pipex file1 cmd1 cmd2 file2
@@ -24,7 +26,7 @@ This is similar to the next shell command
 < file1 cmd1 | cmd2 > file2
 ```
 
-## Bonus
+### Bonus
 For multiple pipes handling
 ```sh
 ./pipex file1 cmd1 cmd2 cmd3 ... cmdn file2
