@@ -14,7 +14,7 @@ or for the bonus part (multiple pipes and heredoc handling)
 make bonus
 ```
 
-### Usage
+## Usage
 
 ### Mandatory
 It should be executed this way
