@@ -3,158 +3,85 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 22:52:43 by stone             #+#    #+#             */
-/*   Updated: 2021/08/12 18:32:52 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/14 19:53:53 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-int	cmd(int pipein, int pipeout, char **args, char **path)
+int	open_infile_outfile(t_pipex *pipex_datas, char *infile, char *outfile)
 {
-	int	fdin;
-	int	fdout;
-
-	fdin = dup2(pipein, STDIN_FILENO);
-	close(pipein);
-	if (fdin < 0)
+	pipex_datas->infilefd = open(infile, O_RDONLY);
+	if (pipex_datas->infilefd < 0)
 	{
-		perror("dup2");
-		return (1);
+		perror("open");
+		return (3);
 	}
-	fdout = dup2(pipeout, STDOUT_FILENO);
-	close(pipeout);
-	if (fdout < 0)
+	pipex_datas->outfilefd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	if (pipex_datas->outfilefd < 0)
 	{
-		perror("dup2");
-		return (2);
+		perror("open");
+		return (3);
 	}
-	exec_cmd(args, path);
-	close(fdout);
-	return (2);
+	return (0);
 }
 
-void	create_heredoc(char *limiter)
+int	call_cmd(t_pipex *pipex_datas, int ac)
 {
-	char	*heredoc;
-	char	*line;
-	char	*tmp;
-	int		len;
-	int		fd;
+	if (pipex_datas->process_nb == 1)
+		return (cmd(pipex_datas->infilefd, pipex_datas->pipefd2[1], \
+		pipex_datas->args, pipex_datas->path));
+	else if (pipex_datas->process_nb == ac - 3)
+		return (cmd(pipex_datas->pipefd1[0], pipex_datas->outfilefd, \
+		pipex_datas->args, pipex_datas->path));
+	return (cmd(pipex_datas->pipefd1[0], pipex_datas->pipefd2[1], \
+	pipex_datas->args, pipex_datas->path));
+}
 
-	(void)limiter;
-	heredoc = ft_strjoin("", "");
-	while (1)
+int	handle_processes(t_pipex *pipex_datas, int ac, char **av)
+{
+	pipex_datas->process_nb = 1;
+	while (pipex_datas->process_nb < ac - 2)
 	{
-		write(1, "pipe heredoc> ", 14);
-		get_next_line(0, &line);
-		if (ft_strlen(line) > ft_strlen(limiter))
-			len = ft_strlen(line);
-		else
-			len = ft_strlen(limiter);
-		if (ft_strncmp(line, limiter, len) == 0)
+		pipe(pipex_datas->pipefd2);
+		if (pipex_datas->pipefd2 < 0)
 		{
-			free(line);
-			break ;
+			perror("pipe");
+			return (1);
 		}
-		tmp = heredoc;
-		heredoc = ft_strjoin(heredoc, line);
-		free(line);
-		free(tmp);
-		tmp = heredoc;
-		heredoc = ft_strjoin(heredoc, "\n");
-		free(tmp);
-	}
-	fd = open(".heredoc", O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU);
-	if (fd < 0)
-	{
-		perror("open");
-		return ;
-	}
-	write(fd, heredoc, ft_strlen(heredoc));
-	close(fd);
-	free(heredoc);
-}
-
-void	heredoc(char *limiter, char *cmd1, char *cmd2, char *outfile)
-{
-	char	**args1;
-	char	**path1;
-	char	**args2;
-	char	**path2;
-	int		fd_heredoc;
-	int		fd_out;
-	int		pipefd[2];
-	int		pid;
-	int		i;
-
-	create_heredoc(limiter);
-	fd_heredoc = open(".heredoc", O_RDONLY);
-	if (fd_heredoc < 0)
-	{
-		perror("open");
-		return ;
-	}
-	fd_out = open(outfile, O_CREAT | O_WRONLY | O_APPEND, S_IRWXU);
-	if (fd_out < 0)
-	{
-		perror("open");
-		return ;
-	}
-	pipe(pipefd);
-	if (pipefd < 0)
-	{
-		perror("pipe");
-		return ;
-	}
-	i = 0;
-	while (i < 2)
-	{
-		args1 = ft_split(cmd1, ' ');
-		path1 = get_paths(*args1);
-		args2 = ft_split(cmd2, ' ');
-		path2 = get_paths(*args2);
-		pid = fork();
-		if (pid < 0)
+		pipex_datas->args = ft_split(av[pipex_datas->process_nb + 1], ' ');
+		pipex_datas->path = get_paths(*pipex_datas->args);
+		pipex_datas->pid = fork();
+		if (pipex_datas->pid < 0)
 		{
 			perror("fork");
-			return ;
+			return (2);
 		}
-		if (pid == 0)
-		{
-			if (i == 0)
-			{
-				cmd(fd_heredoc, pipefd[1], args1, path1);
-				exit(1);
-			}
-			else
-			{
-				cmd(pipefd[0], fd_out, args2, path2);
-				exit(1);
-			}
-		}
-		i++;
+		if (pipex_datas->pid == 0)
+			call_cmd(pipex_datas, ac);
+		close(pipex_datas->pipefd1[0]);
+		close(pipex_datas->pipefd2[1]);
+		pipex_datas->pipefd1[0] = pipex_datas->pipefd2[0];
+		pipex_datas->process_nb++;
 	}
-	close(pipefd[0]);
-	close(pipefd[1]);
-	close(fd_heredoc);
-	close(fd_out);
-	wait(NULL);
-	unlink(".heredoc");
+	return (0);
+}
+
+void	wait_processes(t_pipex *pipex_datas)
+{
+	while (pipex_datas->process_nb > 1)
+	{
+		wait(NULL);
+		pipex_datas->process_nb--;
+	}
 }
 
 int	main(int ac, char **av)
 {
-	char	**args;
-	char	**path;
-	int		pipefd1[2];
-	int		pipefd2[2];
-	int		infilefd;
-	int		outfilefd;
-	int		pid;
-	int		i;
+	t_pipex	pipex_datas;
 
 	if (ac < 5)
 	{
@@ -171,55 +98,10 @@ int	main(int ac, char **av)
 		heredoc(av[2], av[3], av[4], av[5]);
 		return (0);
 	}
-	infilefd = open(av[1], O_RDONLY);
-	if (infilefd < 0)
-	{
-		perror("open");
-		return (3);
-	}
-	outfilefd = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
-	if (outfilefd < 0)
-	{
-		perror("open");
-		return (3);
-	}
-	i = 1;
-	while (i < ac - 2)
-	{
-		pipe(pipefd2);
-		if (pipefd2 < 0)
-		{
-			perror("pipe");
-			return (1);
-		}
-		args = ft_split(av[i + 1], ' ');
-		path = get_paths(*args);
-		pid = fork();
-		if (pid < 0)
-		{
-			perror("fork");
-			return (2);
-		}
-		if (pid == 0)
-		{
-			if (i == 1)
-				return (cmd(infilefd, pipefd2[1], args, path));
-			else if (i == ac - 3)
-				return (cmd(pipefd1[0], outfilefd, args, path));
-			else
-				return (cmd(pipefd1[0], pipefd2[1], args, path));
-		}
-		close(pipefd1[0]);
-		close(pipefd2[1]);
-		pipefd1[0] = pipefd2[0];
-		i++;
-	}
-	close(infilefd);
-	close(outfilefd);
-	while (i > 1)
-	{
-		wait(NULL);
-		i--;
-	}
+	open_infile_outfile(&pipex_datas, av[1], av[ac - 1]);
+	handle_processes(&pipex_datas, ac, av);
+	close(pipex_datas.infilefd);
+	close(pipex_datas.outfilefd);
+	wait_processes(&pipex_datas);
 	return (0);
 }

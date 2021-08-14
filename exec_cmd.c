@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 02:12:37 by stone             #+#    #+#             */
-/*   Updated: 2021/08/12 18:22:02 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/14 16:23:24 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	check_path(char *path, t_path *path_type)
+static void	check_path(char *path, t_path *path_type)
 {
 	int	i;
 
@@ -20,25 +20,24 @@ void	check_path(char *path, t_path *path_type)
 	path_type->is_relative = false;
 	path_type->is_dot_slash = false;
 	if (path[0] == '/')
-	{
 		path_type->is_absolute = true;
-		return ;
-	}
-	if (path[0] == '.' && path[1] == '/')
+	else if (path[0] == '.' && path[1] == '/')
 	{
 		path_type->is_relative = true;
 		path_type->is_dot_slash = true;
-		return ;
 	}
-	i = 0;
-	while (path[i] != '\0')
+	else
 	{
-		if (path[i] == '/')
+		i = 0;
+		while (path[i] != '\0')
 		{
-			path_type->is_relative = true;
-			return ;
+			if (path[i] == '/')
+			{
+				path_type->is_relative = true;
+				return ;
+			}
+			i++;
 		}
-		i++;
 	}
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_args_path.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/12 18:18:54 by stone             #+#    #+#             */
-/*   Updated: 2021/08/12 18:19:28 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/14 16:38:01 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	free_tab(char **ptr)
 	i = 0;
 	while (ptr[i] != NULL)
 	{
-		printf("|%s|\n", ptr[i]);
 		free(ptr[i]);
 		ptr[i] = NULL;
 		i++;

@@ -3,22 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stone <stone@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 03:04:15 by stone             #+#    #+#             */
-/*   Updated: 2021/08/12 18:34:00 by stone            ###   ########.fr       */
+/*   Updated: 2021/08/14 17:33:57 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
+void	init_path_type(t_path *path_type)
+{
+	path_type->is_absolute = false;
+	path_type->is_relative = false;
+	path_type->is_dot_slash = false;
+}
+
 void	check_path(char *path, t_path *path_type)
 {
 	int	i;
 
-	path_type->is_absolute = false;
-	path_type->is_relative = false;
-	path_type->is_dot_slash = false;
+	init_path_type(path_type);
 	if (path[0] == '/')
 	{
 		path_type->is_absolute = true;
@@ -66,4 +71,28 @@ void	exec_cmd(char **args, char **path)
 	}
 	perror(args[0]);
 	free_args_path(args, path);
+}
+
+int	cmd(int pipein, int pipeout, char **args, char **path)
+{
+	int	fdin;
+	int	fdout;
+
+	fdin = dup2(pipein, STDIN_FILENO);
+	close(pipein);
+	if (fdin < 0)
+	{
+		perror("dup2");
+		return (1);
+	}
+	fdout = dup2(pipeout, STDOUT_FILENO);
+	close(pipeout);
+	if (fdout < 0)
+	{
+		perror("dup2");
+		return (2);
+	}
+	exec_cmd(args, path);
+	close(fdout);
+	return (2);
 }

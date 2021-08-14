@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: stone <stone@student.42.fr>                +#+  +:+       +#+         #
+#    By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/30 22:23:23 by sdummett          #+#    #+#              #
-#    Updated: 2021/08/12 18:20:32 by stone            ###   ########.fr        #
+#    Updated: 2021/08/14 17:45:35 by sdummett         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,8 @@ SRC			= pipex.c \
 			rm_n_first_char.c \
 			exec_cmd.c \
 			get_paths.c \
-			utils/free_args_path.c
+			free_args_path.c \
+			cmd_handler.c
 INC			= -Iincludes
 includes	= $(wildcard includes/*.h)
 OBJ			= $(SRC:.c=.o)
@@ -44,8 +45,9 @@ SRCBONUS	=bonus/pipex_bonus.c \
 			bonus/utils/ft_strncmp.c \
 			bonus/utils/gnl/get_next_line_utils.c \
 			bonus/utils/gnl/get_next_line.c \
-			bonus/utils/free_args_path.c
-
+			bonus/utils/free_args_path.c \
+			bonus/heredoc_handler.c \
+			bonus/create_heredoc_tmp_file.c
 OBJBONUS	=$(SRCBONUS:.c=.o)
 
 # ************************************ #
