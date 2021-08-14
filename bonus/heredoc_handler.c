@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/14 16:47:42 by sdummett          #+#    #+#             */
-/*   Updated: 2021/08/14 17:42:44 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/08/14 20:08:37 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ void	close_heredoc_fds(t_heredoc *heredoc_datas)
 
 void	heredoc_create_process(t_heredoc *heredoc_datas, char *cmd1, char *cmd2)
 {
-	static int	i = 0;
-
 	heredoc_parse_args(heredoc_datas, cmd1, cmd2);
 	heredoc_datas->pid = fork();
 	if (heredoc_datas->pid < 0)
@@ -43,9 +41,8 @@ void	heredoc_create_process(t_heredoc *heredoc_datas, char *cmd1, char *cmd2)
 	}
 	if (heredoc_datas->pid == 0)
 	{
-		if (i == 0)
+		if (heredoc_datas->process_nb == 0)
 		{
-			i++;
 			cmd(heredoc_datas->fd_heredoc, heredoc_datas->pipefd[1], \
 			heredoc_datas->args1, heredoc_datas->path1);
 			exit(1);
@@ -61,13 +58,11 @@ void	heredoc_create_process(t_heredoc *heredoc_datas, char *cmd1, char *cmd2)
 
 void	continue_heredoc(t_heredoc *heredoc_datas, char *cmd1, char *cmd2)
 {
-	int		i;
-
-	i = 0;
-	while (i < 2)
+	heredoc_datas->process_nb = 0;
+	while (heredoc_datas->process_nb < 2)
 	{
 		heredoc_create_process(heredoc_datas, cmd1, cmd2);
-		i++;
+		heredoc_datas->process_nb++;
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 22:58:17 by stone             #+#    #+#             */
-/*   Updated: 2021/08/14 19:52:48 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/08/14 20:06:45 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_heredoc
 	int		fd_out;
 	int		pipefd[2];
 	int		pid;
+	int		process_nb;
 }	t_heredoc;
 
 typedef struct s_pipex
