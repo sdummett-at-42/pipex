@@ -1,4 +1,4 @@
-# Welcome to pipex 👋
+# Welcome to pipex
 
 > This project aims to make us understand a bit deeper two concepts that we already know: the redirections and the pipes.
 
